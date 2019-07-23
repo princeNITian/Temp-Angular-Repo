@@ -1,32 +1,55 @@
 <button (click)="showUserForm = !showUserForm" class="btn btn-dark mb-3">Add User</button>
 <div class="card card-body mb-3" *ngIf="showUserForm">
 <h2>Add User</h2>
-<form (submit)="onSubmit($event)">
+<form #userForm="ngForm" (ngSubmit)="onSubmit(userForm)">
   <div class="form-group">
     <label>First Name</label>
-    <input [(ngModel)]="user.firstName" type="text" class="form-control" name="firstName">
+    <input 
+    [(ngModel)]="user.firstName" 
+    [ngClass]="{'is-invalid': userFirstName.errors && userFirstName.touched}"
+    type="text" 
+    class="form-control" 
+    name="firstName"
+    #userFirstName="ngModel"
+    required
+    minlength="2"
+    >
+    <div class="invalid-feedback" [hidden]="!userFirstName.errors?.required">First name required.</div>
+    <div class="invalid-feedback" [hidden]="!userFirstName.errors?.minlength">Must be atleast 2 characters.</div>
   </div>
   <div class="form-group">
     <label>Last Name</label>
-    <input [(ngModel)]="user.lastName" type="text" class="form-control" name="lastName">
+    <input 
+    [(ngModel)]="user.lastName" 
+    [ngClass]="{'is-invalid': userLastName.errors && userLastName.touched}"
+    [(ngModel)]="user.lastName" 
+    type="text" 
+    class="form-control" 
+    name="lastName"
+    #userLastName="ngModel"
+    required
+    minlength="2"
+    >
+    <div class="invalid-feedback" [hidden]="!userLastName.errors?.required">Last name required.</div>
+    <div class="invalid-feedback" [hidden]="!userLastName.errors?.minlength">Must be atleast 2 characters.</div>
   </div>
   <div class="form-group">
-    <label>Age</label>
-    <input [(ngModel)]="user.age" type="number" class="form-control" name="age">
+    <label>Email</label>
+    <input 
+    [(ngModel)]="user.Email" 
+    [ngClass]="{'is-invalid': userEmail.errors && userEmail.touched}"
+    [(ngModel)]="user.email" 
+    type="text" 
+    class="form-control" 
+    name="email"
+    #userEmail="ngModel"
+    required
+    pattern="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?"
+    >
+    <div class="invalid-feedback" [hidden]="!userEmail.errors?.required">Email required.</div>
+    <div class="invalid-feedback" [hidden]="!userEmail.errors?.pattern">Email is not valid.</div>
   </div>
-  <div class="form-group">
-    <label>Street Address</label>
-    <input [(ngModel)]="user.address.street" type="text" class="form-control" name="street">
-  </div>
-  <div class="form-group">
-    <label>City</label>
-    <input [(ngModel)]="user.address.city"  type="text" class="form-control" name="city">
-  </div>
-  <div class="form-group">
-    <label>State</label>
-    <input [(ngModel)]="user.address.state" type="text" class="form-control" name="state">
-  </div>
-  <button [disabled]="user.firstName =='' || user.lastName =='' " (click)="addUser()" class="btn btn-block mb-3" [ngClass]="currentClasses">Add New User</button>
+  <button [disabled]="!userForm.form.valid" class="btn btn-block mb-3" [ngClass]="currentClasses">Add New User</button>
 </form>
 </div>
 <h1>Users</h1>
@@ -40,11 +63,10 @@
 <img src="{{user.image}}" class="rounded-circle imgae-fluid" *ngIf="user.image" alt="Cinque Terre">
       </div>
       <div class="col-sm-8">
-<h2 [ngStyle]="currentStyles">{{ user.firstName | lowercase }} {{user.lastName | uppercase }} <small *ngIf=" user.age && user.address"><button (click)="user.hide = !user.hide" class="btn btn-dark btn-sm"><i [ngClass]="user.hide ? 'fa fa-plus': 'fa fa-minus'"></i></button></small> </h2>
+<h2 [ngStyle]="currentStyles">{{ user.firstName | lowercase }} {{user.lastName | uppercase }} <small><button (click)="user.hide = !user.hide" class="btn btn-dark btn-sm"><i [ngClass]="user.hide ? 'fa fa-plus': 'fa fa-minus'"></i></button></small> </h2>
 <!-- <h2><span [textContent]="user.firstName"></span> {{user.lastName}}</h2> -->
-<ul class="list-group" *ngIf="!user.hide && showExtended && user.age && user.address">
-  <li class="list-group-item">Age: {{ user.age }}</li>
-  <li class="list-group-item">Address: {{user.address.street}},{{user.address.city}},{{user.address.state}}</li>
+<ul class="list-group" *ngIf="!user.hide && showExtended">
+  <li class="list-group-item">Email: {{ user.email }}</li>
   <li class="list-group-item">Balance: {{user.balance | currency:"INR ":"symbol"}}</li>
   <li class="list-group-item">Joined: {{ user.registered | date }}</li>
 </ul>
