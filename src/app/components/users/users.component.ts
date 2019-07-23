@@ -24,15 +24,23 @@ export class UsersComponent implements OnInit {
   currentStyles = {};
   showUserForm:boolean = false;
   @ViewChild("userForm") form: any;
+  data: any;
 
   constructor(private dataService: DataService) { }
 
 
   ngOnInit() {
+
+    this.dataService.getData().subscribe(data =>{
+      console.log(data);
+    });
    
-    this.users = this.dataService.getUsers();
-      
+    this.dataService.getUsers().subscribe(users =>{
+      this.users = users;
       this.loaded = true;
+    })
+      
+      
     
 
      
